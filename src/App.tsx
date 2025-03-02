@@ -11,8 +11,10 @@ import ContentManager from './components/pages/ContentManager'
 import SeoTools from './components/pages/SeoTools'
 import Analytics from './components/pages/Analytics'
 
-// Use environment variable for API key
-const DEFAULT_API_KEY = process.env.REACT_APP_OPENAI_API_KEY || ''
+// Use environment variable for API key - support both Vite and Create React App formats
+const DEFAULT_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || 
+                        process.env.REACT_APP_OPENAI_API_KEY || 
+                        ''
 
 function App() {
   const [apiKey, setApiKey] = useState(() => {
