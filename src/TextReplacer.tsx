@@ -558,7 +558,6 @@ Guidelines:
     const cities = causesFinderCity.split('\n').filter(city => city.trim());
     setIsLoadingCauses(true);
     setIsGeneratingImages(true);
-    const newResults: { [key: string]: string } = {};
     const newImages: { [key: string]: string } = {};
     
     try {
