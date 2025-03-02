@@ -1,10 +1,24 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import App from './App'
 import './index.css'
-import App from './App.tsx'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Console logs for debugging
+console.log('Script executing, environment:', import.meta.env.MODE)
+console.log('Base URL:', import.meta.env.BASE_URL)
+
+try {
+  const rootElement = document.getElementById('root')
+  
+  if (rootElement) {
+    createRoot(rootElement).render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    )
+  } else {
+    console.error('Root element not found')
+  }
+} catch (error) {
+  console.error('Fatal error:', error)
+}

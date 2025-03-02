@@ -472,6 +472,7 @@ The text should be approximately ${sourceText.length} characters long and mentio
     
     const cities = areaFinderCity.split('\n').filter(city => city.trim());
     setIsLoadingAreas(true);
+    const newResults: { [key: string]: string } = {};
     
     try {
       const openai = new OpenAI({
@@ -540,7 +541,8 @@ Guidelines:
         });
         
         generatedAreas = formattedLines.join('\n');
-        setAreaResults({...areaResults, [city.trim()]: generatedAreas});
+        newResults[city.trim()] = generatedAreas;
+        setAreaResults({...newResults}); // Update results as they come in
       }
     } catch (error) {
       console.error('Error fetching areas:', error);
@@ -556,6 +558,8 @@ Guidelines:
     const cities = causesFinderCity.split('\n').filter(city => city.trim());
     setIsLoadingCauses(true);
     setIsGeneratingImages(true);
+    const newResults: { [key: string]: string } = {};
+    const newImages: { [key: string]: string } = {};
     
     try {
       const openai = new OpenAI({
@@ -627,6 +631,7 @@ Make sure each cause is specific to ${city}'s unique conditions and challenges.`
 
             if (imageResponse.data[0]?.url) {
               const imageKey = `${city}-${titles[i]}`;
+              newImages[imageKey] = imageResponse.data[0].url;
               setCauseImages(prev => {
                 const updated = { ...prev };
                 updated[imageKey] = imageResponse.data[0].url as string;
@@ -668,15 +673,6 @@ Make sure each cause is specific to ${city}'s unique conditions and challenges.`
       setIsLoadingCauses(false);
       setIsGeneratingImages(false);
     }
-  };
-
-  const handleReplacementsChange = (index: number, field: string, value: string) => {
-    const updatedReplacements = [...results];
-    updatedReplacements[index] = value;
-    setResults(updatedReplacements);
-    
-    // Update results when replacements change
-    updateResults(updatedReplacements);
   };
 
   return (

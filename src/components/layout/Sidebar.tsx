@@ -1,70 +1,52 @@
-import { Link, useLocation } from 'react-router-dom'
+import React from 'react';
+import {
+  HomeIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  ChartBarIcon,
+  CogIcon,
+  NewspaperIcon
+} from '@heroicons/react/24/outline';
 
 interface SidebarProps {
-  isOpen: boolean
+  activePage: string;
+  onNavigate: (page: string) => void;
 }
 
-const Sidebar = ({ isOpen }: SidebarProps) => {
-  const location = useLocation()
-  
+const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
   const navigation = [
-    { name: 'Dashboard', href: '/' },
-    { name: 'Clients', href: '/clients' },
-    { name: 'Content Manager', href: '/content' },
-    { name: 'SEO Tools', href: '/seo-tools' },
-    { name: 'Analytics', href: '/analytics' },
-  ]
+    { name: 'Dashboard', icon: HomeIcon, id: 'dashboard' },
+    { name: 'Clients', icon: UsersIcon, id: 'clients' },
+    { name: 'Content Manager', icon: DocumentTextIcon, id: 'content' },
+    { name: 'Blog Manager', icon: NewspaperIcon, id: 'blog' },
+    { name: 'SEO Tools', icon: CogIcon, id: 'seo' },
+    { name: 'Analytics', icon: ChartBarIcon, id: 'analytics' },
+  ];
 
   return (
-    <div className={`${isOpen ? 'w-64' : 'w-20'} transition-all duration-300 bg-blue-800 text-white flex flex-col h-full`}>
-      <div className="flex items-center justify-center py-6 border-b border-blue-700">
-        {isOpen ? (
-          <h1 className="text-xl font-bold">DrasticDigital</h1>
-        ) : (
-          <span className="text-xl font-bold">DD</span>
-        )}
+    <div className="h-full flex flex-col bg-gray-900 text-white w-64">
+      <div className="p-4 border-b border-gray-800">
+        <h1 className="text-xl font-bold">Drastic Digital</h1>
       </div>
-
-      <nav className="flex-1 py-4 px-3">
-        <ul className="space-y-1">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href
-            return (
-              <li key={item.name}>
-                <Link
-                  to={item.href}
-                  className={`flex items-center justify-${isOpen ? 'start' : 'center'} py-3 px-4 rounded-md transition-colors ${
-                    isActive
-                      ? 'bg-blue-700 text-white font-medium'
-                      : 'text-blue-200 hover:bg-blue-700 hover:text-white'
-                  }`}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {isOpen ? (
-                    <span className="text-sm">{item.name}</span>
-                  ) : (
-                    <span className="text-sm font-medium w-6 h-6 flex items-center justify-center rounded-full bg-blue-700">
-                      {item.name.charAt(0)}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
+      <nav className="flex-1 mt-5 px-2 space-y-1">
+        {navigation.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => onNavigate(item.id)}
+            className={`
+              flex items-center px-3 py-2 text-sm font-medium rounded-md w-full
+              ${activePage === item.id 
+                ? 'bg-gray-800 text-white' 
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white'}
+            `}
+          >
+            <item.icon className="mr-3 h-5 w-5" aria-hidden="true" />
+            {item.name}
+          </button>
+        ))}
       </nav>
-
-      <div className="mt-auto border-t border-blue-700 py-4 px-3">
-        {isOpen ? (
-          <p className="text-xs text-blue-300 text-center">
-            © 2024 DrasticDigital
-          </p>
-        ) : (
-          <p className="text-xs text-blue-300 text-center">©</p>
-        )}
-      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar 
+export default Sidebar;
